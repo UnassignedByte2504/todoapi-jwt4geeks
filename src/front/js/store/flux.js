@@ -1,22 +1,69 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			message: null,
-			demo: [
-				{
-					title: "FIRST",
-					background: "white",
-					initial: "white"
-				},
-				{
-					title: "SECOND",
-					background: "white",
-					initial: "white"
-				}
-			]
+			errorMessage: '',
+			successMessage:'',
+			logged: null,
+			user: {},
 		},
 		actions: {
-			// Use getActions to call a function within a fuction
+			setLoggedIn: (logged) => {
+				setStore({
+					logged: logged
+				})},
+			loginUser: async (email, password) => {
+				const store = getStore();
+				console.log("Function called")
+				const opts ={
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'},
+					body:`{
+						"email": "${email}",
+						"password": "${password}"
+					}`
+			}
+				console.log(opts)
+					 await fetch('https://3001-4geeksacade-reactflaskh-sxrwtzv8epr.ws-eu79.gitpod.io/api/login', opts)
+					 .then((response) => response.json())
+					 .then((response) => response.access_token ? sessionStorage.setItem('token', response.access_token) && setStore({logged:true}) : null)
+					 .catch((error) => alert(error));
+
+					 await console.log(store.logged)
+			},
+			logout: () => {
+			},
+			signUp: async (username, email, password) => { 
+				const opts = {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body: `
+						{"username": "${username}",
+						"email": "${email}",
+						"password": "${password}"
+						}
+					`
+				}
+				try {
+				const response = await fetch("https://3001-4geeksacade-reactflaskh-sxrwtzv8epr.ws-eu79.gitpod.io/api/signup",
+				 opts)
+				 const data = await response.json();
+				 console.log(data);
+				 if(data.success) {
+					 setStore({
+						 successMessage: data.message
+					 });
+				 } else {
+					 setStore({
+						 errorMessage: data.message
+					 });
+				 }
+				} catch (error) {
+					console.log(error);
+				}
+			},
 			exampleFunction: () => {
 				getActions().changeColor(0, "green");
 			},
