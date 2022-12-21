@@ -6,6 +6,7 @@ import SignUp from "./pages/SignUp";
 
 import Navbar from "./component/Navbar.jsx";
 import Login from "./pages/Login";
+import UserProfile from "./pages/UserProfile";
 import { useContext } from "react";
 import injectContext from "./store/appContext";
 import { Context } from "./store/appContext";
@@ -19,6 +20,17 @@ import { useMemo } from "react";
 
 //create your first component
 const Layout = () => {
+  const hasJWT  = () => {
+    const token = localStorage.getItem("token")
+    const localToken = store.localToken;
+
+    if (token && localToken) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+  
   const {store, actions} = useContext(Context);
   const mode = useSelector((state) => state.global.mode);
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
@@ -37,6 +49,7 @@ const Layout = () => {
             <Route element={<h1>Not found!</h1>} />
             <Route element={<SignUp />} path="/signup" />
             <Route element={<Login />} path="/login" />
+            <Route element={<UserProfile />} path="user/:username" />
           </Routes>
         </ThemeProvider>
       </BrowserRouter>

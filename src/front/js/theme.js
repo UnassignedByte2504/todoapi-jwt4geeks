@@ -80,11 +80,12 @@ export const tokensDark = {
               },
               neutral: {
                 ...tokensDark.grey,
-                main: tokensDark.grey[900],
+                main: tokensDark.grey[200],
               },
               background: {
                 default: tokensDark.primary[200],
                 alt: tokensDark.primary[500],
+                grey: tokensDark.grey[50]
               },
             }
           : {

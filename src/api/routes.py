@@ -59,7 +59,18 @@ def handle_login():
         return jsonify({"message": "Invalid email or password"}), 401
         # Generate the access token
     access_token = create_access_token(identity=user.id)
-    return jsonify({"message": "Logged in as {}".format(user.username), "access_token": access_token}), 200
+    return jsonify({"message": "Logged in as {}".format(user.username), "access_token": access_token, "username": user.username}), 200
+
+
+@api.route('/<string:username>', methods=['GET'])
+@jwt_required()
+def handle_profile(username):
+    # Get the user from the database
+    user = db.session.query(User).filter(User.username == username).first()
+    if not user:
+        return jsonify({"message": "User not found in the database"}), 404
+    return user.serialize(), 200
+
 
 
 @api.route('/<string:username_var>/todolists', methods=['GET', 'POST'])
@@ -99,9 +110,9 @@ def handle_todolists(username_var):
     return jsonify({"message": "Todo list created successfully", "todolist": new_todolist.serialize()}), 201
 
 
-@api.route('/<string:username_var>/todolists/<string:todolist_name>', methods=['GET', 'PUT', 'DELETE', 'POST'])
+@api.route('/<string:username_var>/todolists/<string:todolist_name_var>', methods=['GET', 'PUT', 'DELETE', 'POST'])
 @jwt_required()
-def handle_todo(username_var, todolist_name):
+def handle_todo(username_var, todolist_name_var):
     # Get the user from the database
     current_identity = get_jwt_identity()
     user = db.session.query(User).filter(User.username == username_var).first()
@@ -113,7 +124,7 @@ def handle_todo(username_var, todolist_name):
         return jsonify({"message": "Unauthorized access"}), 401
     if request.method == 'GET':
         # Get the todolist from the database
-        todolist = db.session.query(TodoList).filter(TodoList.user_id == user.id, TodoList.name == todolist_name).first()
+        todolist = db.session.query(TodoList).filter(TodoList.user_id == user.id, TodoList.name == todolist_name_var).first()
         if not todolist:
             return jsonify({"message": "Todo list not found in the database"}), 404
         # Serialize and return the todolist
@@ -122,7 +133,7 @@ def handle_todo(username_var, todolist_name):
     if request.method == 'PUT':
         #edit the current todo list name
         request_data = request.get_json(force=True)
-        todolet = db.session.query(TodoList).filter(TodoList.user_id == user.id and TodoList.name == todolist_name).first()
+        todolet = db.session.query(TodoList).filter(TodoList.user_id == user.id, TodoList.name == todolist_name_var).first()
         if not todolet:
             return jsonify({"message": "Todo list not found in the database"}), 404
         todolet.name = request_data['name']
@@ -133,7 +144,7 @@ def handle_todo(username_var, todolist_name):
 
     if request.method =='DELETE':
         #delete the current todo list
-        todolet = db.session.query(TodoList).filter(TodoList.user_id == user.id and TodoList.name == todolist_name).first()
+        todolet = db.session.query(TodoList).filter(TodoList.user_id == user.id, TodoList.name == todolist_name_var).first()
         if not todolet:
             return jsonify({"message": "Todo list not found in the database"}), 404
         db.session.delete(todolet)
@@ -143,7 +154,7 @@ def handle_todo(username_var, todolist_name):
     if request.method =='POST':
         #add a new todo to the current todo list
         request_data = request.get_json(force=True)
-        todolet = db.session.query(TodoList).filter(TodoList.user_id == user.id and TodoList.name == todolist_name).first()
+        todolet = db.session.query(TodoList).filter(TodoList.user_id == user.id, TodoList.name == todolist_name_var).first()
         if not todolet:
             return jsonify({"message": "Todo list not found in the database"}), 404
         todo = Todo(
@@ -159,14 +170,14 @@ def handle_todo(username_var, todolist_name):
         return jsonify({"message": "Todo added successfully to the database"}), 200
 
 
-@api.route('/<string:username_var>/todolists/<string:todolist_name>/<string:todo_name>', methods=['GET', 'PUT', 'DELETE'])
+@api.route('/<string:username_var>/todolists/<string:todolist_name_var>/<string:todo_name>', methods=['GET', 'PUT', 'DELETE'])
 @jwt_required()
-def todo_item(username_var, todolist_name, todo_name):
+def todo_item(username_var, todolist_name_var, todo_name):
     user = db.session.query(User).filter(User.username == username_var).first()
     if not user:
         return jsonify({"message": "User not found in the database"}), 404
     #get the todo list
-    todolet = db.session.query(TodoList).filter(TodoList.user_id == user.id and TodoList.name == todolist_name).first()
+    todolet = db.session.query(TodoList).filter(TodoList.user_id == user.id and TodoList.name == todolist_name_var).first()
     if not todolet:
         return jsonify({"message": "Todo list not found in the database"}), 404
 

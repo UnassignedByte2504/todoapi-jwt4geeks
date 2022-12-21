@@ -1,0 +1,88 @@
+@import url(colors.css);
+.HeaderWrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  border-radius: 10px 10px 0 0;
+  box-shadow: black 2px 0px 5px;
+  z-index: 2;
+}
+
+.UserInfo {
+  margin: 1rem;
+  width: 30%;
+  padding: 1.25rem;
+  border-radius: 20px;
+  box-shadow: black 2px 0px 5px;
+}
+
+.MainTodoView {
+  border-radius: 10px;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+.TodoViewTitle {
+  width: 70%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.BodyWrapper {
+  display: flex;
+  flex-direction: row;
+}
+
+.BodyWrapper {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-between;
+  border-radius: 0 0 10px 10px;
+  box-shadow: black 2px 0px 5px;
+}
+
+.TodoDetailedView {
+  width: 40%;
+  height: 50vh;
+  overflow-y: scroll;
+  padding: 0.5rem;
+  border-radius: 20px;
+  box-shadow: black 2px 0px 5px;
+}
+.TodoViews {
+  width: 30%;
+  height: 50vh;
+  overflow-y: scroll;
+  padding: 0.5rem;
+  border-radius: 20px;
+  box-shadow: black 2px 0px 5px;
+}
+.TodoListViews {
+  width: 30%;
+  height: 50vh;
+  overflow-y: scroll;
+  padding: 0.5rem;
+  border-radius: 20px;
+  box-shadow: black 2px 0px 5px;
+}
+
+.TodoListComponent {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 5rem;
+  padding: 0.25rem;
+  width: 100%;
+  margin-bottom: 0.25rem;
+  transition: 100ms ease;
+  cursor: pointer;
+  border-radius: 10px;
+  box-shadow: black 2px 0px 5px;
+}
+
+.TodoListComponent:hover {
+  background-color: var(--blue1);
+  scale: 1.05;
+}

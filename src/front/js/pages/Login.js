@@ -26,11 +26,11 @@ const Login = () => {
   }
 
   useEffect (()=> {
-    if (trigger){
-      Navigate("/")
-      setTrigger(false)
+    const username = store.username ? store.username : undefined;
+    if (username) {
+      Navigate(`/user/${username}`)
     }
-  }, [trigger])
+  }, [store.username])
 
 
   const {

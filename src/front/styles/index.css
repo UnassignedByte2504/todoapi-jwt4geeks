@@ -3,6 +3,9 @@
 */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 @import url(resources.css);
+@import url(colors.css);
+@import url(todoviews.css);
+
 body,
 html,
 #root{
@@ -14,6 +17,7 @@ html,
 /* Make stylish scroll bar */
 ::-webkit-scrollbar{
     background-color: #333;
+    display: none;
 }
 
 ::-webkit-scrollbar-thumb{

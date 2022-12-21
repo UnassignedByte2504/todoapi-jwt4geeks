@@ -18,6 +18,7 @@ function SignUp() {
   const Navigate = useNavigate();
   const {actions, store} = useContext(Context);
   const theme = useTheme();
+  
   const onSubmit = async (values, ax) => {
     console.log(values.userName + " " + values.password + " " + values.email);
     const response = await actions.signUp(values.userName, values.email, values.password)
