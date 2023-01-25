@@ -8,7 +8,7 @@ export const Home = () => {
 	console.log(store.logged)
 	return (
 		<div className="text-center mt-5">
-				<h1>Hola mundo</h1>
+				<h1>Todo + API + JWT</h1>
 		</div>
 	);
 };

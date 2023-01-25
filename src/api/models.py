@@ -14,7 +14,7 @@ class User(db.Model):
     password = db.Column(db.String(80), unique=False, nullable=False)
     is_active = db.Column(db.Boolean(), unique=False, nullable=False) 
     todo_list = relationship("TodoList", backref="user")
-
+    completed_todos = db.Column(db.Integer, unique=False, nullable=False, default=0)
     def __repr__(self):
         return '<User %r>' % self.username
 
@@ -24,8 +24,10 @@ class User(db.Model):
             'username': self.username,
             'email': self.email,
             'is_active': self.is_active,
-            'todo_list': [todo.serialize() for todo in self.todo_list]
-            }
+            'todo_list': [todo.serialize() for todo in self.todo_list],
+            'completed_todos': self.completed_todos
+        }
+            
 
 
 class TodoList(db.Model):
@@ -46,15 +48,12 @@ class TodoList(db.Model):
             "user_id": self.user_id,
             "todos": [todo.serialize() for todo in self.todos]
         }
-
-
+ 
 class Todo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=False, nullable=False)
     description = db.Column(db.String(120), unique=False, nullable=False)
-    due_date = db.Column(db.DateTime, nullable=False)
-    priority = db.Column(db.Integer, unique=False, nullable=False)
-    status = db.Column(db.String(80), unique=False, nullable=False)
+    is_completed = db.Column(db.Boolean(), unique=False, nullable=False)
     todo_list_id = db.Column(db.Integer, db.ForeignKey('todo_list.id'), nullable=False)
 
     def __repr__(self):
@@ -65,9 +64,7 @@ class Todo(db.Model):
             "id": self.id,
             "name": self.name,
             "description": self.description,
-            "due_date": self.due_date,
-            "priority": self.priority,
-            "status": self.status,
+            "is_completed": self.is_completed,
             "todo_list_id": self.todo_list_id
         }
         

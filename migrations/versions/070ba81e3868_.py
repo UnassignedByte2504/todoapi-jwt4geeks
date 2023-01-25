@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 37a3e0d82fdf
+Revision ID: 070ba81e3868
 Revises: 
-Create Date: 2022-12-14 18:55:28.998905
+Create Date: 2023-01-25 09:45:35.745535
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '37a3e0d82fdf'
+revision = '070ba81e3868'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -24,6 +24,7 @@ def upgrade():
     sa.Column('email', sa.String(length=120), nullable=False),
     sa.Column('password', sa.String(length=80), nullable=False),
     sa.Column('is_active', sa.Boolean(), nullable=False),
+    sa.Column('completed_todos', sa.Integer(), nullable=False),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('email'),
     sa.UniqueConstraint('username')
@@ -40,9 +41,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=80), nullable=False),
     sa.Column('description', sa.String(length=120), nullable=False),
-    sa.Column('due_date', sa.DateTime(), nullable=False),
-    sa.Column('priority', sa.Integer(), nullable=False),
-    sa.Column('status', sa.String(length=80), nullable=False),
+    sa.Column('is_completed', sa.Boolean(), nullable=False),
     sa.Column('todo_list_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['todo_list_id'], ['todo_list.id'], ),
     sa.PrimaryKeyConstraint('id')

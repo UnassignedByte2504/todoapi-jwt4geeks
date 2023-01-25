@@ -6,26 +6,32 @@ const getState = ({ getStore, getActions, setStore }) => {
       errorMessage: "",
       successMessage: "",
       logged: null,
-      user_info: '',
-      selectedList:'',
-      userTodoLists:[],
+      user_info: "",
+      selectedList: "",
+      userTodoLists: [],
+      deletedList:"",
+      updatedList:"",
+      createdList:"",
+      deletedTodo:"",
+      updatedTodo:""
     },
     actions: {
-      setUserTodoLists:(userTodoLists) => {
+      setUserTodoLists: (userTodoLists) => {
         setStore({
-          userTodoLists: userTodoLists
-          })
+          userTodoLists: userTodoLists,
+        });
       },
-  
-      setselectedList: (name) =>{
+
+      setselectedList: (name) => {
         setStore({
-          selectedList: name
-        })
+          selectedList: name,
+        });
       },
       //>>> todolist and todos actions related with backend
       // <<< todolist and todos actions related with backend
-      fetchUser: async (token, username) => {  //this retrieves user info from the backend
-		const store = getStore();
+      fetchUser: async (token, username) => {
+        //this retrieves user info from the backend
+        const store = getStore();
         const opts = {
           method: "GET",
           headers: {
@@ -35,17 +41,20 @@ const getState = ({ getStore, getActions, setStore }) => {
         };
 
         const response = await fetch(
-          `https://3001-4geeksacade-reactflaskh-sxrwtzv8epr.ws-eu79.gitpod.io/api/${username}`, opts);
-		const data = await response.json();
-		await setStore({ user_info: data })
-    await console.log(data)
+          `${process.env.BACKEND_URL}/api/${username}`,
+          opts
+        );
+        const data = await response.json();
+        await setStore({ user_info: data });
+        await console.log(data);
       },
       setLoggedIn: (logged) => {
         setStore({
           logged: logged,
         });
       },
-      loginUser: async (email, password) => { //this is just for login and retrieve the access_token
+      loginUser: async (email, password) => {
+        //this is just for login and retrieve the access_token
         const store = getStore();
         console.log("Function called");
         const opts = {
@@ -59,7 +68,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}`,
         };
         const response = await fetch(
-          "https://3001-4geeksacade-reactflaskh-sxrwtzv8epr.ws-eu79.gitpod.io/api/login",
+          `${process.env.BACKEND_URL}/api/login`,
           opts
         );
         const data = await response.json();
@@ -68,13 +77,15 @@ const getState = ({ getStore, getActions, setStore }) => {
 
         await sessionStorage.setItem("username", data.username);
 
-		await setStore({
-			localToken: data.access_token,
-			username: data.username,
-			logged: true})
+        await setStore({
+          localToken: data.access_token,
+          username: data.username,
+          logged: true,
+        });
       },
       logOut: () => {}, //to be implemented
-      signUp: async (username, email, password) => { //this is the signup
+      signUp: async (username, email, password) => {
+        //this is the signup
         const opts = {
           method: "POST",
           headers: {
@@ -89,7 +100,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         };
         try {
           const response = await fetch(
-            "https://3001-4geeksacade-reactflaskh-sxrwtzv8epr.ws-eu79.gitpod.io/api/signup",
+            `${process.env.BACKEND_URL}/api/signup`,
             opts
           );
           const data = await response.json();
@@ -136,6 +147,21 @@ const getState = ({ getStore, getActions, setStore }) => {
 
         //reset the global store
         setStore({ demo: demo });
+      },
+      setDeletedList: (listName) => {
+        setStore({ deletedList: listName})
+      },
+      setUpdatedList: (listName) => {
+        setStore({ updatedList: listName})
+      },
+      setCreatedList: (listName) => {
+        setStore({ createdList: listName})
+      },
+      setDeletedTodo: (todoName) => {
+        setStore({ deletedTodo: todoName})
+      },
+      setUpdatedTodo: (todoName) => {
+        setStore({ updatedTodo: todoName})
       },
     },
   };
